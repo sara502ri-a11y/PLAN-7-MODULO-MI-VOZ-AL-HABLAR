@@ -1,0 +1,2178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Planificación Diaria de Clase — Colegio Montano</title>
+  <style>
+    /* ==========================================================================
+       SISTEMA DE DISEÑO INSTITUCIONAL — COLEGIO MONTANO
+       Paleta estricta:
+       - Azul institucional: #1F3C88
+       - Azul secundario:    #3F72AF
+       - Blanco:             #FFFFFF
+       - Amarillo inst.:     #F2C94C
+       ========================================================================== */
+    :root {
+      --azul-institucional: #1F3C88;
+      --azul-secundario: #3F72AF;
+      --blanco: #FFFFFF;
+      --amarillo-institucional: #F2C94C;
+      --borde-suave: rgba(63, 114, 175, 0.22);
+      --fondo-tinte-azul: rgba(63, 114, 175, 0.05);
+      --fondo-tinte-amarillo: rgba(242, 201, 76, 0.16);
+      --texto-oscuro: #16264C;
+      --texto-secundario: #334770;
+      --sombra-card: 0 4px 14px rgba(31, 60, 136, 0.07);
+      --radio: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: #F5F8FC;
+      color: var(--texto-oscuro);
+      line-height: 1.55;
+      font-size: 15px;
+      padding-bottom: 48px;
+    }
+
+    /* Barra de herramientas superior */
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--blanco);
+      border-bottom: 2px solid var(--azul-secundario);
+      padding: 10px 20px;
+      box-shadow: 0 2px 10px rgba(31, 60, 136, 0.08);
+    }
+
+    .toolbar-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .toolbar-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--azul-institucional);
+      font-weight: 600;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: var(--amarillo-institucional);
+      border: 1.5px solid var(--azul-institucional);
+      display: inline-block;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background-color: var(--azul-institucional);
+      color: var(--blanco);
+    }
+
+    .btn-primary:hover {
+      background-color: #172E6B;
+    }
+
+    .btn-secondary {
+      background-color: var(--azul-secundario);
+      color: var(--blanco);
+    }
+
+    .btn-secondary:hover {
+      background-color: #325D91;
+    }
+
+    .btn-accent {
+      background-color: var(--amarillo-institucional);
+      color: var(--azul-institucional);
+      border-color: var(--azul-institucional);
+    }
+
+    .btn-accent:hover {
+      background-color: #E8BC35;
+    }
+
+    .btn-outline {
+      background-color: var(--blanco);
+      color: var(--azul-institucional);
+      border-color: var(--azul-secundario);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--fondo-tinte-azul);
+    }
+
+    /* Contenedor principal */
+    .container {
+      max-width: 1140px;
+      margin: 22px auto 0;
+      padding: 0 16px;
+    }
+
+    /* Encabezado Institucional */
+    .inst-header {
+      background-color: var(--azul-institucional);
+      color: var(--blanco);
+      border-radius: var(--radio);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      border-bottom: 6px solid var(--amarillo-institucional);
+      box-shadow: var(--sombra-card);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .inst-brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .inst-crest {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background-color: var(--blanco);
+      color: var(--azul-institucional);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 22px;
+      border: 3px solid var(--amarillo-institucional);
+      flex-shrink: 0;
+    }
+
+    .inst-title-group h1 {
+      font-size: 24px;
+      letter-spacing: 0.3px;
+      font-weight: 800;
+      color: var(--blanco);
+      line-height: 1.2;
+    }
+
+    .inst-title-group p {
+      font-size: 14px;
+      color: var(--amarillo-institucional);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .time-summary-box {
+      background-color: var(--blanco);
+      color: var(--azul-institucional);
+      padding: 12px 18px;
+      border-radius: 8px;
+      border-left: 5px solid var(--amarillo-institucional);
+      text-align: right;
+      min-width: 210px;
+    }
+
+    .time-summary-box .label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--azul-secundario);
+      font-weight: 700;
+    }
+
+    .time-summary-box .value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--azul-institucional);
+    }
+
+    .time-summary-box .sub {
+      font-size: 12px;
+      color: var(--texto-secundario);
+      margin-top: 2px;
+    }
+
+    .time-warning {
+      background-color: var(--amarillo-institucional);
+      color: var(--azul-institucional);
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 11.5px;
+    }
+
+    /* Tarjetas de sección */
+    .card {
+      background-color: var(--blanco);
+      border-radius: var(--radio);
+      border: 1px solid var(--borde-suave);
+      box-shadow: var(--sombra-card);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .card-header {
+      background-color: var(--azul-secundario);
+      color: var(--blanco);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .card-header.primary-header {
+      background-color: var(--azul-institucional);
+    }
+
+    .card-header h2 {
+      font-size: 16.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-num {
+      background-color: var(--amarillo-institucional);
+      color: var(--azul-institucional);
+      font-weight: 800;
+      font-size: 13px;
+      padding: 2px 9px;
+      border-radius: 6px;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    /* Campos editables */
+    [contenteditable="true"] {
+      outline: none;
+      border-radius: 5px;
+      padding: 3px 6px;
+      transition: background-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    [contenteditable="true"]:hover {
+      background-color: var(--fondo-tinte-azul);
+    }
+
+    [contenteditable="true"]:focus {
+      background-color: var(--blanco);
+      box-shadow: 0 0 0 2px var(--amarillo-institucional);
+    }
+
+    /* Grid de Datos Generales */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .meta-item {
+      border: 1px solid var(--borde-suave);
+      border-left: 4px solid var(--azul-secundario);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background-color: var(--blanco);
+    }
+
+    .meta-item.highlight-meta {
+      border-left-color: var(--amarillo-institucional);
+      background-color: var(--fondo-tinte-amarillo);
+    }
+
+    .meta-label {
+      font-size: 11.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--azul-secundario);
+      letter-spacing: 0.4px;
+      margin-bottom: 3px;
+    }
+
+    .meta-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--azul-institucional);
+    }
+
+    /* Competencia y Logro */
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .comp-box {
+      border: 1.5px solid var(--borde-suave);
+      border-radius: 8px;
+      padding: 16px;
+      background-color: var(--blanco);
+    }
+
+    .comp-box-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--azul-institucional);
+      background-color: var(--amarillo-institucional);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+
+    .comp-text {
+      font-size: 15px;
+      color: var(--texto-oscuro);
+      line-height: 1.6;
+    }
+
+    /* Competencias clave y blandas */
+    .skills-columns {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+
+    .skill-group-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--azul-institucional);
+      border-bottom: 2px solid var(--amarillo-institucional);
+      padding-bottom: 6px;
+      margin-bottom: 12px;
+    }
+
+    .skill-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--borde-suave);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background-color: var(--blanco);
+    }
+
+    .skill-item.inactive-skill {
+      opacity: 0.55;
+      background-color: var(--fondo-tinte-azul);
+    }
+
+    .skill-item input[type="checkbox"] {
+      margin-top: 4px;
+      width: 17px;
+      height: 17px;
+      accent-color: var(--azul-institucional);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .skill-content strong {
+      color: var(--azul-institucional);
+      display: block;
+      font-size: 14.5px;
+    }
+
+    .skill-content p {
+      font-size: 13.5px;
+      color: var(--texto-secundario);
+      margin-top: 2px;
+    }
+
+    /* Hábitos Montano */
+    .habits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 14px;
+    }
+
+    .habit-card {
+      border: 1px solid var(--borde-suave);
+      border-top: 4px solid var(--amarillo-institucional);
+      border-radius: 8px;
+      padding: 14px;
+      background-color: var(--blanco);
+    }
+
+    .habit-badge {
+      display: inline-block;
+      background-color: var(--azul-institucional);
+      color: var(--amarillo-institucional);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 5px;
+      margin-bottom: 8px;
+    }
+
+    .habit-title {
+      font-weight: 700;
+      color: var(--azul-institucional);
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+
+    .habit-desc {
+      font-size: 13.8px;
+      color: var(--texto-secundario);
+    }
+
+    /* Navegación Secuencia Didáctica */
+    .seq-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      background-color: var(--fondo-tinte-azul);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--borde-suave);
+      margin-bottom: 18px;
+    }
+
+    .tab-btn {
+      flex: 1 1 160px;
+      background-color: var(--blanco);
+      color: var(--azul-institucional);
+      border: 1.5px solid var(--azul-secundario);
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      background-color: var(--fondo-tinte-azul);
+    }
+
+    .tab-btn.active {
+      background-color: var(--azul-institucional);
+      color: var(--blanco);
+      border-color: var(--azul-institucional);
+    }
+
+    .tab-btn .tab-code {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .tab-btn .tab-time {
+      background-color: var(--amarillo-institucional);
+      color: var(--azul-institucional);
+      font-size: 12px;
+      padding: 2px 7px;
+      border-radius: 12px;
+      font-weight: 800;
+    }
+
+    .tab-btn .tab-name {
+      font-size: 12.5px;
+      margin-top: 3px;
+      opacity: 0.92;
+    }
+
+    /* Barra de distribución visual de 50 minutos */
+    .timeline-bar {
+      display: flex;
+      height: 12px;
+      border-radius: 999px;
+      overflow: hidden;
+      background-color: var(--fondo-tinte-azul);
+      border: 1px solid var(--borde-suave);
+      margin-bottom: 18px;
+    }
+
+    .tl-seg-im { background-color: var(--amarillo-institucional); }
+    .tl-seg-tp { background-color: var(--azul-secundario); }
+    .tl-seg-tc { background-color: var(--azul-institucional); }
+    .tl-seg-p  { background-color: #6B94C6; }
+
+    /* Bloques de momento didáctico */
+    .moment-panel {
+      display: none;
+      border: 1.5px solid var(--azul-secundario);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 18px;
+      background-color: var(--blanco);
+    }
+
+    .moment-panel.active-panel {
+      display: block;
+    }
+
+    .moment-banner {
+      background-color: var(--azul-institucional);
+      color: var(--blanco);
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 4px solid var(--amarillo-institucional);
+    }
+
+    .moment-banner h3 {
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .moment-time-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--amarillo-institucional);
+      color: var(--azul-institucional);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .moment-time-input {
+      width: 46px;
+      border: 1.5px solid var(--azul-institucional);
+      border-radius: 5px;
+      text-align: center;
+      font-weight: 800;
+      color: var(--azul-institucional);
+      background-color: var(--blanco);
+      padding: 2px;
+      font-size: 14px;
+    }
+
+    .moment-content {
+      padding: 18px;
+    }
+
+    .moment-meta-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .moment-info-box {
+      background-color: var(--fondo-tinte-azul);
+      border-left: 4px solid var(--azul-secundario);
+      padding: 10px 14px;
+      border-radius: 6px;
+    }
+
+    .moment-info-box.yellow-box {
+      background-color: var(--fondo-tinte-amarillo);
+      border-left-color: var(--amarillo-institucional);
+    }
+
+    .moment-info-box h4 {
+      font-size: 12.5px;
+      text-transform: uppercase;
+      color: var(--azul-institucional);
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+
+    .steps-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 14px;
+    }
+
+    .steps-table th {
+      background-color: var(--azul-secundario);
+      color: var(--blanco);
+      text-align: left;
+      padding: 10px 12px;
+      font-weight: 700;
+    }
+
+    .steps-table td {
+      border: 1px solid var(--borde-suave);
+      padding: 10px 12px;
+      vertical-align: top;
+    }
+
+    .time-pill {
+      display: inline-block;
+      background-color: var(--amarillo-institucional);
+      color: var(--azul-institucional);
+      font-weight: 800;
+      font-size: 12.5px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .roles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .role-card {
+      border: 1px solid var(--borde-suave);
+      border-radius: 8px;
+      padding: 10px 12px;
+      background-color: var(--blanco);
+    }
+
+    .role-card strong {
+      color: var(--azul-institucional);
+      display: block;
+      font-size: 14px;
+      margin-bottom: 3px;
+    }
+
+    /* Recursos Didácticos */
+    .resources-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+    }
+
+    .resource-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      border: 1px solid var(--borde-suave);
+      border-radius: 8px;
+      padding: 11px 13px;
+      background-color: var(--blanco);
+    }
+
+    .resource-icon {
+      background-color: var(--amarillo-institucional);
+      color: var(--azul-institucional);
+      font-weight: 800;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+
+    /* Evaluación */
+    .eval-stages {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .eval-stage-card {
+      border: 1px solid var(--borde-suave);
+      border-radius: 8px;
+      padding: 14px;
+      background-color: var(--blanco);
+    }
+
+    .eval-tag {
+      display: inline-block;
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 5px;
+      margin-bottom: 8px;
+    }
+
+    .tag-formativa {
+      background-color: var(--azul-secundario);
+      color: var(--blanco);
+    }
+
+    .tag-calificada {
+      background-color: var(--amarillo-institucional);
+      color: var(--azul-institucional);
+    }
+
+    .feedback-box {
+      background-color: var(--fondo-tinte-amarillo);
+      border: 1.5px solid var(--amarillo-institucional);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    /* Instrumento de evaluación interactivo */
+    .rubric-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background-color: var(--fondo-tinte-azul);
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      border: 1px solid var(--borde-suave);
+    }
+
+    .student-eval-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .student-eval-field label {
+      font-weight: 700;
+      color: var(--azul-institucional);
+      font-size: 14px;
+    }
+
+    .student-eval-input {
+      border: 1.5px solid var(--azul-secundario);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 14px;
+      color: var(--texto-oscuro);
+      background-color: var(--blanco);
+      min-width: 220px;
+    }
+
+    .score-display {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .score-badge {
+      background-color: var(--azul-institucional);
+      color: var(--blanco);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .level-badge {
+      background-color: var(--amarillo-institucional);
+      color: var(--azul-institucional);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .checklist-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .checklist-table th {
+      background-color: var(--azul-institucional);
+      color: var(--blanco);
+      padding: 10px 12px;
+      text-align: left;
+    }
+
+    .checklist-table th.center,
+    .checklist-table td.center {
+      text-align: center;
+    }
+
+    .checklist-table td {
+      border: 1px solid var(--borde-suave);
+      padding: 10px 12px;
+    }
+
+    .checklist-table tr:nth-child(even) {
+      background-color: var(--fondo-tinte-azul);
+    }
+
+    .radio-eval {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--azul-institucional);
+      cursor: pointer;
+    }
+
+    /* Observaciones docentes */
+    .obs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .obs-box {
+      border: 1px solid var(--borde-suave);
+      border-radius: 8px;
+      padding: 14px;
+      background-color: var(--blanco);
+    }
+
+    .obs-box h3 {
+      font-size: 14.5px;
+      color: var(--azul-institucional);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .obs-area {
+      min-height: 82px;
+      border: 1px dashed var(--azul-secundario);
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 14px;
+      color: var(--texto-oscuro);
+      background-color: var(--blanco);
+    }
+
+    /* Modal personalizado (sin alert/confirm) */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(22, 38, 76, 0.55);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background-color: var(--blanco);
+      border-radius: 12px;
+      max-width: 440px;
+      width: 100%;
+      border-top: 6px solid var(--amarillo-institucional);
+      box-shadow: 0 12px 30px rgba(31, 60, 136, 0.25);
+      overflow: hidden;
+    }
+
+    .modal-body {
+      padding: 22px;
+    }
+
+    .modal-body h3 {
+      color: var(--azul-institucional);
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .modal-body p {
+      color: var(--texto-secundario);
+      font-size: 14.5px;
+      margin-bottom: 18px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* Notificación Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--azul-institucional);
+      color: var(--blanco);
+      border-left: 5px solid var(--amarillo-institucional);
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 6px 20px rgba(31, 60, 136, 0.25);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    /* Responsividad móvil */
+    @media (max-width: 640px) {
+      .inst-header {
+        padding: 18px;
+      }
+      .inst-title-group h1 {
+        font-size: 20px;
+      }
+      .time-summary-box {
+        width: 100%;
+        text-align: left;
+      }
+      .toolbar-actions {
+        width: 100%;
+      }
+      .toolbar-actions .btn {
+        flex: 1 1 auto;
+        justify-content: center;
+      }
+    }
+
+    /* ==========================================================================
+       ESTILOS DE IMPRESIÓN / EXPORTACIÓN PDF LIMPIA
+       ========================================================================== */
+    @media print {
+      @page {
+        size: letter;
+        margin: 12mm;
+      }
+
+      body {
+        background-color: var(--blanco) !important;
+        padding-bottom: 0;
+        font-size: 12.5px;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      .toolbar,
+      .seq-nav,
+      .no-print,
+      .modal-backdrop,
+      .toast {
+        display: none !important;
+      }
+
+      .container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .card {
+        box-shadow: none;
+        border: 1px solid var(--azul-secundario);
+        margin-bottom: 14px;
+        break-inside: avoid;
+      }
+
+      /* Mostrar TODOS los momentos didácticos al imprimir */
+      .moment-panel {
+        display: block !important;
+        margin-bottom: 14px;
+        break-inside: avoid;
+      }
+
+      .moment-time-input {
+        border: none;
+        background: transparent;
+        width: auto;
+      }
+
+      [contenteditable="true"] {
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA DE HERRAMIENTAS INTERACTIVA -->
+  <header class="toolbar no-print">
+    <div class="toolbar-inner">
+      <div class="toolbar-status">
+        <span class="status-dot"></span>
+        <span id="save-status">Planificación institucional lista • Edición directa habilitada</span>
+      </div>
+      <div class="toolbar-actions">
+        <button type="button" class="btn btn-primary" id="btn-save" title="Guardar cambios en este navegador">
+          Guardar cambios
+        </button>
+        <button type="button" class="btn btn-secondary" id="btn-export" title="Descargar archivo HTML con los datos editados">
+          Exportar HTML
+        </button>
+        <button type="button" class="btn btn-accent" id="btn-print" title="Imprimir o guardar como PDF">
+          Imprimir / PDF
+        </button>
+        <button type="button" class="btn btn-outline" id="btn-reset" title="Restaurar valores originales">
+          Reiniciar
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" id="plan-root">
+
+    <!-- 1. ENCABEZADO INSTITUCIONAL Y DATOS GENERALES -->
+    <section class="inst-header">
+      <div class="inst-brand">
+        <div class="inst-crest" aria-hidden="true">CM</div>
+        <div class="inst-title-group">
+          <h1 contenteditable="true" data-field="colegio_titulo">Colegio Montano</h1>
+          <p contenteditable="true" data-field="subtitulo_plan">Planificación Diaria de Clase • Modelo Formativo por Competencias</p>
+        </div>
+      </div>
+      <div class="time-summary-box">
+        <div class="label">Duración Total de Sesión</div>
+        <div class="value"><span id="total-minutes-display">50</span> minutos</div>
+        <div class="sub" id="breakdown-display">IM 8' • TP 15' • TC 20' • P 7'</div>
+        <div class="time-warning" id="time-warning" style="display: none;">Ajustar suma a 50 min</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header primary-header">
+        <h2><span class="section-num">1</span> Datos Generales de la Clase</h2>
+        <span style="font-size: 12.5px; color: var(--amarillo-institucional); font-weight: 600;">Haga clic sobre cualquier dato para editar</span>
+      </div>
+      <div class="card-body">
+        <div class="meta-grid">
+          <div class="meta-item">
+            <div class="meta-label">Colegio</div>
+            <div class="meta-value" contenteditable="true" data-field="colegio">Montano</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Modalidad</div>
+            <div class="meta-value" contenteditable="true" data-field="modalidad">Presencial</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Materia</div>
+            <div class="meta-value" contenteditable="true" data-field="materia">Comunicación y Lenguaje</div>
+          </div>
+          <div class="meta-item highlight-meta">
+            <div class="meta-label">Tema de la Sesión</div>
+            <div class="meta-value" contenteditable="true" data-field="tema">Modulo mi voz al hablar</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Grado</div>
+            <div class="meta-value" contenteditable="true" data-field="grado">Tercero primaria</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Unidad</div>
+            <div class="meta-value" contenteditable="true" data-field="unidad">1</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Número de Plan</div>
+            <div class="meta-value" contenteditable="true" data-field="num_plan">7</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Fecha</div>
+            <div class="meta-value" contenteditable="true" data-field="fecha">Enero 2027</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Docente</div>
+            <div class="meta-value" contenteditable="true" data-field="docente">Sara Rivera</div>
+          </div>
+          <div class="meta-item highlight-meta">
+            <div class="meta-label">Duración</div>
+            <div class="meta-value" contenteditable="true" data-field="duracion_texto">50 minutos</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. COMPETENCIA Y LOGRO DE APRENDIZAJE -->
+    <section class="card">
+      <div class="card-header">
+        <h2><span class="section-num">2</span> Competencia y Logro de Aprendizaje</h2>
+      </div>
+      <div class="card-body">
+        <div class="comp-grid">
+          <div class="comp-box">
+            <div class="comp-box-title">Competencia de Aprendizaje</div>
+            <p class="comp-text" contenteditable="true" data-field="competencia">
+              Aplica recursos paralingüísticos de entonación, volumen, ritmo y pausas al expresar mensajes orales en diversas situaciones comunicativas cotidianas, adecuando su voz a la intención, la emoción y el público que escucha.
+            </p>
+          </div>
+          <div class="comp-box">
+            <div class="comp-box-title">Logro de Aprendizaje (50 minutos)</div>
+            <p class="comp-text" contenteditable="true" data-field="logro">
+              Al finalizar los 50 minutos de clase, el estudiante de tercero primaria interpreta un fragmento narrativo o informativo breve regulando intencionalmente tres variaciones de su voz (volumen adecuado al espacio, entonación acorde a la emoción y pausas en signos de puntuación), demostrando claridad y seguridad frente a sus compañeros.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. COMPETENCIAS CLAVE Y BLANDAS -->
+    <section class="card">
+      <div class="card-header">
+        <h2><span class="section-num">3</span> Competencias Clave y Competencias Blandas a Desarrollar</h2>
+      </div>
+      <div class="card-body">
+        <div class="skills-columns">
+          <!-- Competencias Clave -->
+          <div>
+            <h3 class="skill-group-title">Competencias Clave</h3>
+            <div class="skill-item">
+              <input type="checkbox" checked data-skill="cc_critico" />
+              <div class="skill-content">
+                <strong contenteditable="true" data-field="cc1_t">Pensamiento crítico</strong>
+                <p contenteditable="true" data-field="cc1_d">Analiza cómo cambia el significado de una misma frase según el tono y volumen empleados, seleccionando la modulación pertinente para cada contexto.</p>
+              </div>
+            </div>
+            <div class="skill-item">
+              <input type="checkbox" checked data-skill="cc_creatividad" />
+              <div class="skill-content">
+                <strong contenteditable="true" data-field="cc2_t">Creatividad</strong>
+                <p contenteditable="true" data-field="cc2_d">Diseña matices vocales expresivos y gestos de apoyo para dar vida a personajes o noticias breves en el trabajo cooperativo.</p>
+              </div>
+            </div>
+            <div class="skill-item">
+              <input type="checkbox" checked data-skill="cc_equipo" />
+              <div class="skill-content">
+                <strong contenteditable="true" data-field="cc3_t">Trabajo en equipo</strong>
+                <p contenteditable="true" data-field="cc3_d">Coordina turnos de intervención y ajusta su volumen vocal en función de la acústica del grupo asignado por el docente.</p>
+              </div>
+            </div>
+            <div class="skill-item inactive-skill">
+              <input type="checkbox" data-skill="cc_problemas" />
+              <div class="skill-content">
+                <strong contenteditable="true" data-field="cc4_t">Resolución de problemas (Opcional)</strong>
+                <p contenteditable="true" data-field="cc4_d">Corrige barreras de comunicación oral (hablar muy rápido o muy bajo) tras recibir retroalimentación de su equipo.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Competencias Blandas -->
+          <div>
+            <h3 class="skill-group-title">Competencias Blandas</h3>
+            <div class="skill-item">
+              <input type="checkbox" checked data-skill="cb_comunicacion" />
+              <div class="skill-content">
+                <strong contenteditable="true" data-field="cb1_t">Comunicación efectiva</strong>
+                <p contenteditable="true" data-field="cb1_d">Transmite ideas con articulación clara, contacto visual y modulación respetuosa hacia sus compañeros y docente.</p>
+              </div>
+            </div>
+            <div class="skill-item">
+              <input type="checkbox" checked data-skill="cb_emocional" />
+              <div class="skill-content">
+                <strong contenteditable="true" data-field="cb2_t">Inteligencia emocional</strong>
+                <p contenteditable="true" data-field="cb2_d">Reconoce emociones (alegría, sorpresa, calma, urgencia) y autorregula la intensidad de su voz sin gritar ni inhibirse.</p>
+              </div>
+            </div>
+            <div class="skill-item">
+              <input type="checkbox" checked data-skill="cb3_decisiones" />
+              <div class="skill-content">
+                <strong contenteditable="true" data-field="cb3_t">Toma de decisiones</strong>
+                <p contenteditable="true" data-field="cb3_d">Decide en su guía personal qué marcas de pausa y énfasis aplicará antes de leer en voz alta.</p>
+              </div>
+            </div>
+            <div class="skill-item inactive-skill">
+              <input type="checkbox" data-skill="cb_flexibilidad" />
+              <div class="skill-content">
+                <strong contenteditable="true" data-field="cb4_t">Flexibilidad (Opcional)</strong>
+                <p contenteditable="true" data-field="cb4_d">Adapta su registro vocal ante cambios de rol o nuevas tarjetas de situación propuestas durante la plenaria.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. HÁBITOS DEL MODELO FORMATIVO MONTANO -->
+    <section class="card">
+      <div class="card-header">
+        <h2><span class="section-num">4</span> Hábitos del Modelo Formativo Montano</h2>
+      </div>
+      <div class="card-body">
+        <div class="habits-grid">
+          <div class="habit-card">
+            <span class="habit-badge">Hábito 2</span>
+            <div class="habit-title" contenteditable="true" data-field="hab1_t">Comenzar con un fin en mente</div>
+            <p class="habit-desc" contenteditable="true" data-field="hab1_d">
+              Antes de hablar en el Trabajo Personal y Cooperativo, el estudiante planifica la intención de su mensaje (informar, emocionar o preguntar) marcando las pausas y tonos en su texto.
+            </p>
+          </div>
+          <div class="habit-card">
+            <span class="habit-badge">Hábito 5</span>
+            <div class="habit-title" contenteditable="true" data-field="hab2_t">Buscar primero entender, luego ser entendido</div>
+            <p class="habit-desc" contenteditable="true" data-field="hab2_d">
+              Durante el ensayo en equipos y la Plenaria, los estudiantes practican la escucha activa en silencio para comprender el mensaje de cada compañero antes de dar sugerencias respetuosas.
+            </p>
+          </div>
+          <div class="habit-card">
+            <span class="habit-badge">Hábito 6</span>
+            <div class="habit-title" contenteditable="true" data-field="hab3_t">Sinergizar</div>
+            <p class="habit-desc" contenteditable="true" data-field="hab3_d">
+              En el Trabajo Cooperativo, cada integrante asume un rol complementario para construir una presentación oral colectiva más clara y expresiva que la lectura individual aislada.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. SECUENCIA DIDÁCTICA INTERACTIVA (50 MINUTOS EXACTOS) -->
+    <section class="card">
+      <div class="card-header primary-header">
+        <h2><span class="section-num">5</span> Secuencia Didáctica Obligatoria (IM – TP – TC – P = 50 min)</h2>
+        <span style="font-size: 12.5px; color: var(--amarillo-institucional); font-weight: 700;">Navegación por momentos</span>
+      </div>
+      <div class="card-body">
+
+        <!-- Barra proporcional visual de tiempo -->
+        <div class="timeline-bar no-print" title="Distribución de 50 minutos: IM 8', TP 15', TC 20', P 7'">
+          <div class="tl-seg-im" id="bar-im" style="width: 16%;"></div>
+          <div class="tl-seg-tp" id="bar-tp" style="width: 30%;"></div>
+          <div class="tl-seg-tc" id="bar-tc" style="width: 40%;"></div>
+          <div class="tl-seg-p"  id="bar-p"  style="width: 14%;"></div>
+        </div>
+
+        <!-- Pestañas de navegación -->
+        <div class="seq-nav no-print" role="tablist">
+          <button type="button" class="tab-btn active" data-target="all">
+            <div class="tab-code"><span>VISTA COMPLETA</span><span class="tab-time" id="tab-total-badge">50 min</span></div>
+            <div class="tab-name">Todos los momentos</div>
+          </button>
+          <button type="button" class="tab-btn" data-target="panel-im">
+            <div class="tab-code"><span>IM</span><span class="tab-time" id="tab-im-badge">8 min</span></div>
+            <div class="tab-name">Introducción Motivante</div>
+          </button>
+          <button type="button" class="tab-btn" data-target="panel-tp">
+            <div class="tab-code"><span>TP</span><span class="tab-time" id="tab-tp-badge">15 min</span></div>
+            <div class="tab-name">Trabajo Personal</div>
+          </button>
+          <button type="button" class="tab-btn" data-target="panel-tc">
+            <div class="tab-code"><span>TC</span><span class="tab-time" id="tab-tc-badge">20 min</span></div>
+            <div class="tab-name">Trabajo Cooperativo</div>
+          </button>
+          <button type="button" class="tab-btn" data-target="panel-p">
+            <div class="tab-code"><span>P</span><span class="tab-time" id="tab-p-badge">7 min</span></div>
+            <div class="tab-name">Plenaria y Cierre</div>
+          </button>
+        </div>
+
+        <!-- MOMENTO 1: IM (8 minutos) -->
+        <article class="moment-panel active-panel" id="panel-im">
+          <div class="moment-banner">
+            <div>
+              <span style="font-size: 12px; color: var(--amarillo-institucional); font-weight: 700; text-transform: uppercase;">Momento 1 • Activación</span>
+              <h3 contenteditable="true" data-field="im_titulo">IM — Introducción Motivante: «El semáforo del volumen y la emoción»</h3>
+            </div>
+            <div class="moment-time-control">
+              <span>Duración:</span>
+              <input type="number" class="moment-time-input" id="min-im" value="8" min="1" max="50" />
+              <span>min</span>
+            </div>
+          </div>
+          <div class="moment-content">
+            <div class="moment-meta-row">
+              <div class="moment-info-box">
+                <h4>Propósito Didáctico</h4>
+                <p contenteditable="true" data-field="im_proposito">
+                  Activar conocimientos previos sobre la expresión oral y descubrir mediante un desafío lúdico cómo el volumen, el ritmo y la entonación transforman la intención de un mensaje cotidiano.
+                </p>
+              </div>
+              <div class="moment-info-box yellow-box">
+                <h4>Situación Problema / Pregunta Generadora</h4>
+                <p contenteditable="true" data-field="im_problema">
+                  «¿Qué ocurre en el recreo o en casa si pedimos ayuda susurrando como un ratón o si contamos un secreto gritando como un megáfono? ¿Cómo sabe quien nos escucha si estamos felices, sorprendidos o dando una indicación importante?»
+                </p>
+              </div>
+            </div>
+
+            <table class="steps-table">
+              <thead>
+                <tr>
+                  <th style="width: 110px;">Tiempo</th>
+                  <th>Instrucciones Paso a Paso (Actividad Presencial)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="time-pill">Min 1 – 2</span></td>
+                  <td contenteditable="true" data-field="im_paso1">
+                    <strong>Planteamiento del reto:</strong> La docente escribe en la pizarra la frase neutra: <em>«Hoy encontré una caja azul debajo del escritorio»</em> y presenta el semáforo visual de voz (Rojo: voz alta/proyectada para todo el salón; Amarillo: voz media/conversacional; Verde: voz suave/confidencial).
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="time-pill">Min 3 – 6</span></td>
+                  <td contenteditable="true" data-field="im_paso2">
+                    <strong>Dinámica guiada:</strong> Se eligen 4 tarjetas de emoción/situación al azar (ej. <em>«Noticia emocionante»</em>, <em>«Misterio en la biblioteca»</em>, <em>«Aviso urgente en el patio»</em>, <em>«Pregunta curiosa»</em>). Voluntarios y el grupo en eco pronuncian la misma frase ajustando el nivel del semáforo y la entonación correspondiente.
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="time-pill">Min 7 – 8</span></td>
+                  <td contenteditable="true" data-field="im_paso3">
+                    <strong>Conexión con el propósito de clase:</strong> Mediante preguntas dirigidas, los estudiantes concluyen que modular la voz no es solo hablar fuerte, sino elegir el volumen, tono y pausa adecuados. Se anuncia el logro de aprendizaje de la sesión.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="moment-meta-row">
+              <div class="moment-info-box">
+                <h4>Recursos y Evidencia de Participación</h4>
+                <p contenteditable="true" data-field="im_evidencia">
+                  <strong>Recursos:</strong> Semáforo visual en cartulina, tarjetas de emociones, pizarra y marcadores.<br/>
+                  <strong>Evidencia:</strong> Participación oral activa en los ensayos de modulación y respuestas a las preguntas generadoras.
+                </p>
+              </div>
+              <div class="moment-info-box yellow-box">
+                <h4>Hábito Formativo Relacionado</h4>
+                <p contenteditable="true" data-field="im_habito">
+                  <strong>Hábito 5 (Buscar primero entender, luego ser entendido):</strong> Escuchan con atención cómo suena cada variación vocal para identificar qué emoción transmite antes de intervenir.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- MOMENTO 2: TP (15 minutos) -->
+        <article class="moment-panel active-panel" id="panel-tp">
+          <div class="moment-banner">
+            <div>
+              <span style="font-size: 12px; color: var(--amarillo-institucional); font-weight: 700; text-transform: uppercase;">Momento 2 • Construcción Individual</span>
+              <h3 contenteditable="true" data-field="tp_titulo">TP — Trabajo Personal: «Mi mapa de modulación expresiva»</h3>
+            </div>
+            <div class="moment-time-control">
+              <span>Duración:</span>
+              <input type="number" class="moment-time-input" id="min-tp" value="15" min="1" max="50" />
+              <span>min</span>
+            </div>
+          </div>
+          <div class="moment-content">
+            <div class="moment-meta-row">
+              <div class="moment-info-box">
+                <h4>Propósito Didáctico</h4>
+                <p contenteditable="true" data-field="tp_proposito">
+                  Desarrollar la comprensión lectora e interpretación vocal individual mediante el análisis de signos de puntuación e intenciones comunicativas en textos breves de la vida cotidiana, evitando la lectura mecánica.
+                </p>
+              </div>
+              <div class="moment-info-box yellow-box">
+                <h4>Producto Individual Verificable</h4>
+                <p contenteditable="true" data-field="tp_producto">
+                  <strong>Guía impresa «Mi mapa de modulación»:</strong> Texto breve intervenido con código de colores y símbolos de voz (pausas <code>//</code>, énfasis subrayado, nivel de volumen y emoción elegida) más 2 respuestas breves de justificación.
+                </p>
+              </div>
+            </div>
+
+            <table class="steps-table">
+              <thead>
+                <tr>
+                  <th style="width: 110px;">Tiempo</th>
+                  <th>Instrucciones Claras y Secuencia Individual</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="time-pill">Min 1 – 3</span></td>
+                  <td contenteditable="true" data-field="tp_paso1">
+                    <strong>Lectura silenciosa y análisis de intención:</strong> Cada estudiante recibe su hoja de trabajo con tres situaciones reales (un anuncio escolar, un diálogo de cuento y una recomendación de cuidado ambiental). Lee en silencio e identifica quién habla, a quién se dirige y qué emoción predomina.
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="time-pill">Min 4 – 11</span></td>
+                  <td contenteditable="true" data-field="tp_paso2">
+                    <strong>Codificación vocal personalizada:</strong> Sin copiar de compañeros, cada alumno marca en uno de los textos elegidos: 1) diagonales <code>//</code> donde hará pausas breves por comas o puntos; 2) subrayado amarillo en las palabras clave que requieren mayor énfasis; 3) ícono de volumen (suave, medio o proyectado) y signo de entonación (pregunta <code>¿?</code>, admiración <code>¡!</code> o afirmación).
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="time-pill">Min 12 – 15</span></td>
+                  <td contenteditable="true" data-field="tp_paso3">
+                    <strong>Ensayo en susurro y justificación escrita:</strong> Practica la lectura en voz muy baja siguiendo sus propias marcas y responde en dos líneas: <em>«¿Por qué elegí ese tono y volumen para este mensaje?»</em>. La docente monitorea puesto por puesto.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="moment-meta-row">
+              <div class="moment-info-box">
+                <h4>Recursos</h4>
+                <p contenteditable="true" data-field="tp_recursos">
+                  Hoja de trabajo impresa individual, lápiz, crayones o resaltadores (amarillo y azul), cuaderno de Comunicación y Lenguaje.
+                </p>
+              </div>
+              <div class="moment-info-box yellow-box">
+                <h4>Criterios de Seguimiento Docente</h4>
+                <p contenteditable="true" data-field="tp_seguimiento">
+                  1) Coherencia entre signos de puntuación (<code>¿?</code>, <code>¡!</code>, comas) y marcas de pausa/tono; 2) Argumentación propia (no copiada) sobre la intención del mensaje; 3) Autonomía y concentración durante los 15 minutos.
+                </p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- MOMENTO 3: TC (20 minutos) -->
+        <article class="moment-panel active-panel" id="panel-tc">
+          <div class="moment-banner">
+            <div>
+              <span style="font-size: 12px; color: var(--amarillo-institucional); font-weight: 700; text-transform: uppercase;">Momento 3 • Construcción Colaborativa</span>
+              <h3 contenteditable="true" data-field="tc_titulo">TC — Trabajo Cooperativo: «Noticiero y cuentacuentos del aula»</h3>
+            </div>
+            <div class="moment-time-control">
+              <span>Duración:</span>
+              <input type="number" class="moment-time-input" id="min-tc" value="20" min="1" max="50" />
+              <span>min</span>
+            </div>
+          </div>
+          <div class="moment-content">
+            <div class="moment-meta-row">
+              <div class="moment-info-box">
+                <h4>Propósito y Organización de Equipos</h4>
+                <p contenteditable="true" data-field="tc_proposito">
+                  Aplicar la modulación vocal en una situación comunicativa real mediante la creación y ensayo de una cápsula oral breve. <strong>Organización obligatoria:</strong> Equipos heterogéneos de 4 integrantes conformados previamente por la docente (no por afinidad) para favorecer la integración y el apoyo mutuo.
+                </p>
+              </div>
+              <div class="moment-info-box yellow-box">
+                <h4>Producto Colectivo Concreto</h4>
+                <p contenteditable="true" data-field="tc_producto">
+                  <strong>Guion breve modulado y presentación oral de 45 segundos:</strong> Una cápsula informativa o relato corto donde todos los integrantes intervienen con cambios claros de tono, volumen y pausas.
+                </p>
+              </div>
+            </div>
+
+            <h4 style="font-size: 13.5px; color: var(--azul-institucional); text-transform: uppercase; margin-bottom: 8px;">Roles Cooperativos Asignados</h4>
+            <div class="roles-grid">
+              <div class="role-card">
+                <strong contenteditable="true" data-field="tc_rol1_t">1. Coordinador/a de turnos</strong>
+                <span style="font-size: 13px; color: var(--texto-secundario);" contenteditable="true" data-field="tc_rol1_d">Organiza el orden de participación para que los 4 hablen y controla el tiempo del equipo.</span>
+              </div>
+              <div class="role-card">
+                <strong contenteditable="true" data-field="tc_rol2_t">2. Regulador/a de voz y semáforo</strong>
+                <span style="font-size: 13px; color: var(--texto-secundario);" contenteditable="true" data-field="tc_rol2_d">Verifica que el volumen sea audible sin gritar y recuerda las pausas en cada ensayo.</span>
+              </div>
+              <div class="role-card">
+                <strong contenteditable="true" data-field="tc_rol3_t">3. Secretario/a de guion</strong>
+                <span style="font-size: 13px; color: var(--texto-secundario);" contenteditable="true" data-field="tc_rol3_d">Anota en la tarjeta del equipo las líneas breves de cada integrante y sus marcas de emoción.</span>
+              </div>
+              <div class="role-card">
+                <strong contenteditable="true" data-field="tc_rol4_t">4. Presentador/a de cierre</strong>
+                <span style="font-size: 13px; color: var(--texto-secundario);" contenteditable="true" data-field="tc_rol4_d">Introduce el tema del equipo al iniciar y formula la frase final con entonación expresiva.</span>
+              </div>
+            </div>
+
+            <table class="steps-table">
+              <thead>
+                <tr>
+                  <th style="width: 110px;">Tiempo</th>
+                  <th>Instrucciones de Trabajo en Equipo</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="time-pill">Min 1 – 4</span></td>
+                  <td contenteditable="true" data-field="tc_paso1">
+                    <strong>Conformación y elección de reto:</strong> La docente asigna los equipos y entrega una tarjeta de situación comunicativa real (ej. <em>«Anuncio de campaña de reciclaje escolar»</em>, <em>«Crónica de un partido emocionante»</em>, <em>«Invitación a la feria de lectura»</em>, <em>«Consejo para cuidar el agua»</em>). Se distribuyen los 4 roles.
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="time-pill">Min 5 – 12</span></td>
+                  <td contenteditable="true" data-field="tc_paso2">
+                    <strong>Diseño colaborativo del guion modulado:</strong> Redactan 4 intervenciones breves (una por integrante) integrando al menos una pregunta, una exclamación y una pausa intencional. Deciden en consenso qué emoción y volumen llevará cada intervención.
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="time-pill">Min 13 – 20</span></td>
+                  <td contenteditable="true" data-field="tc_paso3">
+                    <strong>Ensayo cruzado y mejora:</strong> Realizan dos rondas de ensayo interno en voz media. El Regulador de voz brinda una sugerencia constructiva a cada compañero (ej. <em>«haz una pausa más larga después de la pregunta»</em>) mientras la docente acompaña y retroalimenta a cada grupo.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="moment-info-box">
+              <h4>Recursos y Criterios de Evaluación Cooperativa</h4>
+              <p contenteditable="true" data-field="tc_criterios">
+                <strong>Recursos:</strong> Tarjetas de situaciones comunicativas, fichas de guion de equipo, tarjetas de roles, cronómetro de aula.<br/>
+                <strong>Criterios:</strong> Participación equitativa de los 4 miembros, cumplimiento del rol asignado, coherencia entre el texto y la modulación vocal, y respeto durante el ensayo.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <!-- MOMENTO 4: P (7 minutos) -->
+        <article class="moment-panel active-panel" id="panel-p">
+          <div class="moment-banner">
+            <div>
+              <span style="font-size: 12px; color: var(--amarillo-institucional); font-weight: 700; text-transform: uppercase;">Momento 4 • Socialización y Verificación</span>
+              <h3 contenteditable="true" data-field="p_titulo">P — Plenaria y Cierre: «Muestra vocal y Ticket de salida»</h3>
+            </div>
+            <div class="moment-time-control">
+              <span>Duración:</span>
+              <input type="number" class="moment-time-input" id="min-p" value="7" min="1" max="50" />
+              <span>min</span>
+            </div>
+          </div>
+          <div class="moment-content">
+            <div class="moment-meta-row">
+              <div class="moment-info-box">
+                <h4>Propósito de Cierre</h4>
+                <p contenteditable="true" data-field="p_proposito">
+                  Socializar los productos cooperativos ante el grupo, contrastar el impacto comunicativo de una buena modulación y verificar individualmente el logro de aprendizaje mediante un ticket de salida.
+                </p>
+              </div>
+              <div class="moment-info-box yellow-box">
+                <h4>Estrategia de Evaluación de Salida</h4>
+                <p contenteditable="true" data-field="p_estrategia">
+                  <strong>Ticket de salida «Mi termómetro de voz»:</strong> Tarjeta breve donde el estudiante marca su nivel de dominio en volumen, entonación y pausas, y escribe una situación real fuera del aula donde aplicará lo aprendido hoy.
+                </p>
+              </div>
+            </div>
+
+            <table class="steps-table">
+              <thead>
+                <tr>
+                  <th style="width: 110px;">Tiempo</th>
+                  <th>Pasos de Plenaria y Cierre</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="time-pill">Min 1 – 4</span></td>
+                  <td contenteditable="true" data-field="p_paso1">
+                    <strong>Socialización y retroalimentación positiva:</strong> Dos o tres equipos elegidos al azar presentan su cápsula de 45 segundos frente al salón (los equipos restantes presentarán en el inicio de la siguiente clase). El grupo escucha en silencio (Hábito 5) y señala un acierto vocal observado.
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="time-pill">Min 5 – 7</span></td>
+                  <td contenteditable="true" data-field="p_paso2">
+                    <strong>Síntesis y Ticket de salida:</strong> La docente sintetiza las tres llaves de la modulación (volumen, entonación y pausas). Cada estudiante completa en 2 minutos su tarjeta «Mi termómetro de voz» y la entrega al salir como evidencia final.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="moment-info-box">
+              <h4>Recursos y Evidencia Final</h4>
+              <p contenteditable="true" data-field="p_evidencia">
+                <strong>Recursos:</strong> Tarjetas impresas de Ticket de salida, buzón o carpeta de entrega en el escritorio.<br/>
+                <strong>Evidencia final:</strong> Presentaciones orales observadas con lista de cotejo y colección completa de tickets de salida individuales.
+              </p>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- 6. RECURSOS DIDÁCTICOS -->
+    <section class="card">
+      <div class="card-header">
+        <h2><span class="section-num">6</span> Recursos Didácticos (Aula Presencial)</h2>
+      </div>
+      <div class="card-body">
+        <div class="resources-grid">
+          <div class="resource-item">
+            <div class="resource-icon">1</div>
+            <div>
+              <strong style="color: var(--azul-institucional);" contenteditable="true" data-field="rec1_t">Semáforo visual de voz</strong>
+              <p style="font-size: 13.5px; color: var(--texto-secundario);" contenteditable="true" data-field="rec1_d">Cartulina institucional con círculos rojo, amarillo y verde para regular la intensidad del volumen en el aula.</p>
+            </div>
+          </div>
+          <div class="resource-item">
+            <div class="resource-icon">2</div>
+            <div>
+              <strong style="color: var(--azul-institucional);" contenteditable="true" data-field="rec2_t">Tarjetas didácticas de emociones y situaciones</strong>
+              <p style="font-size: 13.5px; color: var(--texto-secundario);" contenteditable="true" data-field="rec2_d">Set de 12 tarjetas plastificadas con contextos reales (noticias, cuentos, avisos escolares) y emociones.</p>
+            </div>
+          </div>
+          <div class="resource-item">
+            <div class="resource-icon">3</div>
+            <div>
+              <strong style="color: var(--azul-institucional);" contenteditable="true" data-field="rec3_t">Guía impresa «Mi mapa de modulación»</strong>
+              <p style="font-size: 13.5px; color: var(--texto-secundario);" contenteditable="true" data-field="rec3_d">Hoja de trabajo individual con lecturas cortas y simbología de pausas, énfasis y entonación.</p>
+            </div>
+          </div>
+          <div class="resource-item">
+            <div class="resource-icon">4</div>
+            <div>
+              <strong style="color: var(--azul-institucional);" contenteditable="true" data-field="rec4_t">Pizarra, marcadores y cuaderno</strong>
+              <p style="font-size: 13.5px; color: var(--texto-secundario);" contenteditable="true" data-field="rec4_d">Pizarra acrílica del salón, marcadores azul/negro/amarillo, cuaderno y resaltadores del estudiante.</p>
+            </div>
+          </div>
+          <div class="resource-item">
+            <div class="resource-icon">5</div>
+            <div>
+              <strong style="color: var(--azul-institucional);" contenteditable="true" data-field="rec5_t">Fichas de roles y Ticket de salida</strong>
+              <p style="font-size: 13.5px; color: var(--texto-secundario);" contenteditable="true" data-field="rec5_d">Distintivos de los 4 roles cooperativos y tarjetas impresas «Mi termómetro de voz» para el cierre.</p>
+            </div>
+          </div>
+          <div class="resource-item">
+            <div class="resource-icon">6</div>
+            <div>
+              <strong style="color: var(--azul-institucional);" contenteditable="true" data-field="rec6_t">Reloj visible o cronómetro de aula</strong>
+              <p style="font-size: 13.5px; color: var(--texto-secundario);" contenteditable="true" data-field="rec6_d">Herramienta física para gestionar con precisión los bloques de 8, 15, 20 y 7 minutos sin depender de internet.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. EVALUACIÓN DEL APRENDIZAJE -->
+    <section class="card">
+      <div class="card-header">
+        <h2><span class="section-num">7</span> Evaluación del Aprendizaje (Inicial, Formativa y Sumativa)</h2>
+      </div>
+      <div class="card-body">
+        <div class="eval-stages">
+          <div class="eval-stage-card">
+            <span class="eval-tag tag-formativa">Evidencia Formativa • Evaluación Inicial</span>
+            <h3 style="font-size: 15px; color: var(--azul-institucional); margin-bottom: 6px;" contenteditable="true" data-field="ev_ini_t">Diagnóstico Oral en IM (8 min)</h3>
+            <p style="font-size: 13.8px; color: var(--texto-secundario);" contenteditable="true" data-field="ev_ini_d">
+              Observación directa de las variaciones de volumen y entonación durante la dinámica «El semáforo de la voz» y respuestas a las preguntas generadoras para detectar timidez, lectura monótona o exceso de volumen.
+            </p>
+          </div>
+
+          <div class="eval-stage-card">
+            <span class="eval-tag tag-formativa">Evidencia Formativa • Evaluación de Proceso</span>
+            <h3 style="font-size: 15px; color: var(--azul-institucional); margin-bottom: 6px;" contenteditable="true" data-field="ev_for_t">Acompañamiento en TP y TC (35 min)</h3>
+            <p style="font-size: 13.8px; color: var(--texto-secundario);" contenteditable="true" data-field="ev_for_d">
+              Revisión de las marcas de pausas y énfasis en la guía individual «Mi mapa de modulación», monitoreo de los roles en equipos y verificación del Ticket de salida «Mi termómetro de voz» (sin ponderación numérica de unidad).
+            </p>
+          </div>
+
+          <div class="eval-stage-card">
+            <span class="eval-tag tag-calificada">Actividad Calificada • Evaluación Sumativa</span>
+            <h3 style="font-size: 15px; color: var(--azul-institucional); margin-bottom: 6px;" contenteditable="true" data-field="ev_sum_t">Desempeño Oral en Cápsula Comunicativa</h3>
+            <p style="font-size: 13.8px; color: var(--texto-secundario);" contenteditable="true" data-field="ev_sum_d">
+              Valoración mediante lista de cotejo institucional de la intervención oral modulada del estudiante (volumen adecuado, entonación expresiva y respeto de pausas) conforme a la planificación de la Unidad 1.
+            </p>
+          </div>
+        </div>
+
+        <div class="feedback-box">
+          <strong style="color: var(--azul-institucional); display: block; margin-bottom: 4px;">Retroalimentación Específica y Oportunidad de Mejora:</strong>
+          <p style="font-size: 14px; color: var(--texto-oscuro);" contenteditable="true" data-field="ev_retro">
+            Cuando un estudiante presente lectura plana o volumen muy bajo, la docente modela brevemente la frase usando el semáforo visual (nivel amarillo) y le ofrece una segunda oportunidad inmediata de repetir su intervención aplicando una pausa consciente antes de la idea principal, reforzando su confianza sin penalizar el error inicial.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. INSTRUMENTO DE EVALUACIÓN INTERACTIVO -->
+    <section class="card">
+      <div class="card-header primary-header">
+        <h2><span class="section-num">8</span> Instrumento de Evaluación Interactivo — Lista de Cotejo</h2>
+        <span style="font-size: 12.5px; color: var(--amarillo-institucional); font-weight: 700;">Cálculo automático en tiempo real</span>
+      </div>
+      <div class="card-body">
+
+        <div class="rubric-controls">
+          <div class="student-eval-field">
+            <label for="eval-student-name">Estudiante / Equipo evaluado:</label>
+            <input type="text" id="eval-student-name" class="student-eval-input" placeholder="Ej. Equipo 1 — Sofía Morales" />
+          </div>
+          <div class="score-display">
+            <div class="score-badge">Puntaje: <span id="rubric-score">0</span> / 10 pts</div>
+            <div class="level-badge" id="rubric-level">Sin evaluar</div>
+            <button type="button" class="btn btn-outline no-print" id="btn-clear-rubric" style="padding: 6px 10px; font-size: 12.5px;">
+              Limpiar marcadores
+            </button>
+          </div>
+        </div>
+
+        <table class="checklist-table">
+          <thead>
+            <tr>
+              <th style="width: 50px;">N.°</th>
+              <th>Criterio Observable Alineado al Logro de Aprendizaje</th>
+              <th class="center" style="width: 95px;">Logrado<br/>(2 pts)</th>
+              <th class="center" style="width: 110px;">En proceso<br/>(1 pt)</th>
+              <th class="center" style="width: 115px;">Requiere apoyo<br/>(0 pts)</th>
+            </tr>
+          </thead>
+          <tbody id="rubric-tbody">
+            <tr>
+              <td><strong>1</strong></td>
+              <td contenteditable="true" data-field="crit_1">
+                <strong>Regulación del volumen:</strong> Proyecta su voz con claridad para que todo el salón escuche sin llegar a gritar, ajustándose al espacio presencial.
+              </td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit1" value="2" /></td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit1" value="1" /></td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit1" value="0" /></td>
+            </tr>
+            <tr>
+              <td><strong>2</strong></td>
+              <td contenteditable="true" data-field="crit_2">
+                <strong>Entonación expresiva:</strong> Varía el tono de su voz según la intención comunicativa y los signos de interrogación (¿?) o exclamación (¡!).
+              </td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit2" value="2" /></td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit2" value="1" /></td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit2" value="0" /></td>
+            </tr>
+            <tr>
+              <td><strong>3</strong></td>
+              <td contenteditable="true" data-field="crit_3">
+                <strong>Ritmo y pausas conscientes:</strong> Mantiene una velocidad comprensible y realiza pausas breves respetando comas, puntos y las marcas de su guía.
+              </td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit3" value="2" /></td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit3" value="1" /></td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit3" value="0" /></td>
+            </tr>
+            <tr>
+              <td><strong>4</strong></td>
+              <td contenteditable="true" data-field="crit_4">
+                <strong>Planificación y articulación:</strong> Pronuncia con claridad las palabras clave seleccionadas en su mapa de modulación o guion cooperativo.
+              </td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit4" value="2" /></td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit4" value="1" /></td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit4" value="0" /></td>
+            </tr>
+            <tr>
+              <td><strong>5</strong></td>
+              <td contenteditable="true" data-field="crit_5">
+                <strong>Escucha activa y cooperación (Hábitos 5 y 6):</strong> Cumple su rol en el equipo asignado por el docente y escucha con respeto las intervenciones de sus compañeros.
+              </td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit5" value="2" /></td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit5" value="1" /></td>
+              <td class="center"><input type="radio" class="radio-eval" name="crit5" value="0" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 9. OBSERVACIONES Y REFLEXIÓN DOCENTE -->
+    <section class="card">
+      <div class="card-header">
+        <h2><span class="section-num">9</span> Observaciones y Reflexión Docente</h2>
+      </div>
+      <div class="card-body">
+        <div class="obs-grid">
+          <div class="obs-box">
+            <h3>Aciertos y Fortalezas de la Sesión</h3>
+            <div class="obs-area" contenteditable="true" data-field="obs_aciertos">
+              Registre aquí las actividades que generaron mayor participación estudiantil y evidencias destacadas del logro de aprendizaje...
+            </div>
+          </div>
+          <div class="obs-box">
+            <h3>Ajustes Metodológicos para Próximas Clases</h3>
+            <div class="obs-area" contenteditable="true" data-field="obs_ajustes">
+              Anote modificaciones de tiempo, agrupación o apoyos visuales necesarios para los equipos que presentarán en la siguiente sesión...
+            </div>
+          </div>
+          <div class="obs-box">
+            <h3>Seguimiento Individualizado</h3>
+            <div class="obs-area" contenteditable="true" data-field="obs_seguimiento">
+              Indique nombres de estudiantes que requieren acompañamiento adicional en proyección vocal o seguridad al hablar en público...
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL DE CONFIRMACIÓN DE REINICIO -->
+  <div class="modal-backdrop" id="reset-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <div class="modal-body">
+        <h3 id="modal-title">Restablecer planificación original</h3>
+        <p>¿Desea restaurar todos los campos editables, tiempos y criterios de evaluación a los valores iniciales de la clase «Modulo mi voz al hablar»? Se borrarán los cambios guardados en este navegador.</p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-outline" id="btn-cancel-reset">Cancelar</button>
+          <button type="button" class="btn btn-primary" id="btn-confirm-reset">Sí, restablecer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTIFICACIÓN FLOTANTE -->
+  <div class="toast" id="toast-msg" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const STORAGE_KEY = "montano_plan_clase_v1";
+
+      // Referencias principales
+      const editableNodes = document.querySelectorAll("[data-field]");
+      const skillCheckboxes = document.querySelectorAll("[data-skill]");
+      const timeInputs = {
+        im: document.getElementById("min-im"),
+        tp: document.getElementById("min-tp"),
+        tc: document.getElementById("min-tc"),
+        p: document.getElementById("min-p")
+      };
+
+      const totalDisplay = document.getElementById("total-minutes-display");
+      const breakdownDisplay = document.getElementById("breakdown-display");
+      const timeWarning = document.getElementById("time-warning");
+      const saveStatus = document.getElementById("save-status");
+      const toastEl = document.getElementById("toast-msg");
+
+      // Guardar estado inicial por defecto para poder reiniciar sin recargar
+      const defaultState = captureCurrentState();
+
+      function showToast(message) {
+        toastEl.textContent = message;
+        toastEl.classList.add("show");
+        window.clearTimeout(showToast._timer);
+        showToast._timer = window.setTimeout(() => {
+          toastEl.classList.remove("show");
+        }, 2800);
+      }
+
+      // Captura todo el estado editable de la plantilla
+      function captureCurrentState() {
+        const fields = {};
+        editableNodes.forEach((el) => {
+          fields[el.getAttribute("data-field")] = el.innerHTML;
+        });
+
+        const skills = {};
+        skillCheckboxes.forEach((cb) => {
+          skills[cb.getAttribute("data-skill")] = cb.checked;
+        });
+
+        const times = {
+          im: parseInt(timeInputs.im.value, 10) || 0,
+          tp: parseInt(timeInputs.tp.value, 10) || 0,
+          tc: parseInt(timeInputs.tc.value, 10) || 0,
+          p: parseInt(timeInputs.p.value, 10) || 0
+        };
+
+        const rubric = {
+          student: document.getElementById("eval-student-name").value,
+          scores: {}
+        };
+        for (let i = 1; i <= 5; i++) {
+          const checked = document.querySelector(`input[name="crit${i}"]:checked`);
+          rubric.scores[`crit${i}`] = checked ? checked.value : null;
+        }
+
+        return { fields, skills, times, rubric };
+      }
+
+      // Aplica un objeto de estado al DOM
+      function applyState(state) {
+        if (!state) return;
+
+        if (state.fields) {
+          editableNodes.forEach((el) => {
+            const key = el.getAttribute("data-field");
+            if (Object.prototype.hasOwnProperty.call(state.fields, key)) {
+              el.innerHTML = state.fields[key];
+            }
+          });
+        }
+
+        if (state.skills) {
+          skillCheckboxes.forEach((cb) => {
+            const key = cb.getAttribute("data-skill");
+            if (Object.prototype.hasOwnProperty.call(state.skills, key)) {
+              cb.checked = Boolean(state.skills[key]);
+              updateSkillVisual(cb);
+            }
+          });
+        }
+
+        if (state.times) {
+          timeInputs.im.value = state.times.im;
+          timeInputs.tp.value = state.times.tp;
+          timeInputs.tc.value = state.times.tc;
+          timeInputs.p.value = state.times.p;
+          recalculateTimes();
+        }
+
+        if (state.rubric) {
+          document.getElementById("eval-student-name").value = state.rubric.student || "";
+          for (let i = 1; i <= 5; i++) {
+            const val = state.rubric.scores ? state.rubric.scores[`crit${i}`] : null;
+            const radios = document.querySelectorAll(`input[name="crit${i}"]`);
+            radios.forEach((r) => {
+              r.checked = val !== null && r.value === String(val);
+            });
+          }
+          calculateRubricScore();
+        }
+      }
+
+      // Persistencia en localStorage
+      function saveToLocalStorage(notify = false) {
+        try {
+          const state = captureCurrentState();
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          const now = new Date();
+          const hora = now.toLocaleTimeString("es-GT", { hour: "2-digit", minute: "2-digit" });
+          saveStatus.textContent = `Guardado en navegador (${hora})`;
+          if (notify) {
+            showToast("Planificación guardada correctamente en el navegador.");
+          }
+        } catch (err) {
+          saveStatus.textContent = "No se pudo acceder al almacenamiento local";
+        }
+      }
+
+      function loadFromLocalStorage() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            applyState(parsed);
+            saveStatus.textContent = "Cambios previos cargados desde el navegador";
+          }
+        } catch (err) {
+          // Si falla el parseo, se mantienen los valores iniciales
+        }
+      }
+
+      // Actualización visual de competencias seleccionadas
+      function updateSkillVisual(checkbox) {
+        const card = checkbox.closest(".skill-item");
+        if (card) {
+          card.classList.toggle("inactive-skill", !checkbox.checked);
+        }
+      }
+
+      skillCheckboxes.forEach((cb) => {
+        cb.addEventListener("change", () => {
+          updateSkillVisual(cb);
+          saveToLocalStorage(false);
+        });
+      });
+
+      // Cálculo dinámico de los 50 minutos
+      function recalculateTimes() {
+        const im = Math.max(0, parseInt(timeInputs.im.value, 10) || 0);
+        const tp = Math.max(0, parseInt(timeInputs.tp.value, 10) || 0);
+        const tc = Math.max(0, parseInt(timeInputs.tc.value, 10) || 0);
+        const p  = Math.max(0, parseInt(timeInputs.p.value, 10) || 0);
+        const total = im + tp + tc + p;
+
+        totalDisplay.textContent = total;
+        breakdownDisplay.textContent = `IM ${im}' • TP ${tp}' • TC ${tc}' • P ${p}'`;
+
+        document.getElementById("tab-total-badge").textContent = `${total} min`;
+        document.getElementById("tab-im-badge").textContent = `${im} min`;
+        document.getElementById("tab-tp-badge").textContent = `${tp} min`;
+        document.getElementById("tab-tc-badge").textContent = `${tc} min`;
+        document.getElementById("tab-p-badge").textContent  = `${p} min`;
+
+        const safeTotal = total > 0 ? total : 1;
+        document.getElementById("bar-im").style.width = `${(im / safeTotal) * 100}%`;
+        document.getElementById("bar-tp").style.width = `${(tp / safeTotal) * 100}%`;
+        document.getElementById("bar-tc").style.width = `${(tc / safeTotal) * 100}%`;
+        document.getElementById("bar-p").style.width  = `${(p / safeTotal) * 100}%`;
+
+        if (total !== 50) {
+          timeWarning.style.display = "inline-block";
+          timeWarning.textContent = `Suma actual: ${total} min (debe ser 50 min)`;
+        } else {
+          timeWarning.style.display = "none";
+        }
+      }
+
+      Object.values(timeInputs).forEach((input) => {
+        input.addEventListener("input", () => {
+          recalculateTimes();
+          saveToLocalStorage(false);
+        });
+      });
+
+      // Navegación por pestañas entre IM, TP, TC, P y Vista Completa
+      const tabButtons = document.querySelectorAll(".tab-btn");
+      const momentPanels = document.querySelectorAll(".moment-panel");
+
+      tabButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          tabButtons.forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          const target = btn.getAttribute("data-target");
+          momentPanels.forEach((panel) => {
+            if (target === "all" || panel.id === target) {
+              panel.classList.add("active-panel");
+            } else {
+              panel.classList.remove("active-panel");
+            }
+          });
+        });
+      });
+
+      // Cálculo en tiempo real de la lista de cotejo
+      const rubricRadios = document.querySelectorAll(".radio-eval");
+      const scoreEl = document.getElementById("rubric-score");
+      const levelEl = document.getElementById("rubric-level");
+
+      function calculateRubricScore() {
+        let total = 0;
+        let answered = 0;
+
+        for (let i = 1; i <= 5; i++) {
+          const checked = document.querySelector(`input[name="crit${i}"]:checked`);
+          if (checked) {
+            total += parseInt(checked.value, 10);
+            answered++;
+          }
+        }
+
+        scoreEl.textContent = total;
+
+        if (answered === 0) {
+          levelEl.textContent = "Sin evaluar";
+        } else if (total >= 9) {
+          levelEl.textContent = "Logro Destacado";
+        } else if (total >= 7) {
+          levelEl.textContent = "Logro Esperado";
+        } else if (total >= 4) {
+          levelEl.textContent = "En Proceso";
+        } else {
+          levelEl.textContent = "Requiere Acompañamiento";
+        }
+      }
+
+      rubricRadios.forEach((radio) => {
+        radio.addEventListener("change", () => {
+          calculateRubricScore();
+          saveToLocalStorage(false);
+        });
+      });
+
+      document.getElementById("eval-student-name").addEventListener("input", () => {
+        saveToLocalStorage(false);
+      });
+
+      document.getElementById("btn-clear-rubric").addEventListener("click", () => {
+        rubricRadios.forEach((r) => { r.checked = false; });
+        document.getElementById("eval-student-name").value = "";
+        calculateRubricScore();
+        saveToLocalStorage(false);
+        showToast("Instrumento de evaluación listo para el siguiente estudiante.");
+      });
+
+      // Guardado automático al editar textos
+      let typingTimer;
+      editableNodes.forEach((el) => {
+        el.addEventListener("input", () => {
+          window.clearTimeout(typingTimer);
+          typingTimer = window.setTimeout(() => {
+            saveToLocalStorage(false);
+          }, 500);
+        });
+      });
+
+      // Botón Guardar manual
+      document.getElementById("btn-save").addEventListener("click", () => {
+        saveToLocalStorage(true);
+      });
+
+      // Botón Imprimir / Guardar como PDF
+      document.getElementById("btn-print").addEventListener("click", () => {
+        window.print();
+      });
+
+      // Botón Exportar HTML autocontenido con los valores editados
+      document.getElementById("btn-export").addEventListener("click", () => {
+        // Sincronizar valores de inputs en atributos HTML antes de clonar
+        Object.values(timeInputs).forEach((inp) => {
+          inp.setAttribute("value", inp.value);
+        });
+        const studentInput = document.getElementById("eval-student-name");
+        studentInput.setAttribute("value", studentInput.value);
+
+        skillCheckboxes.forEach((cb) => {
+          if (cb.checked) cb.setAttribute("checked", "checked");
+          else cb.removeAttribute("checked");
+        });
+
+        rubricRadios.forEach((r) => {
+          if (r.checked) r.setAttribute("checked", "checked");
+          else r.removeAttribute("checked");
+        });
+
+        const fullHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+        const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        const materia = (document.querySelector('[data-field="materia"]').textContent || "Clase").trim().replace(/\s+/g, "_");
+        const planNum = (document.querySelector('[data-field="num_plan"]').textContent || "7").trim();
+        link.href = url;
+        link.download = `Plan_Montano_${materia}_Plan${planNum}.html`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        showToast("Archivo HTML exportado con todos sus cambios.");
+      });
+
+      // Modal de confirmación de reinicio
+      const resetModal = document.getElementById("reset-modal");
+      document.getElementById("btn-reset").addEventListener("click", () => {
+        resetModal.classList.add("open");
+      });
+
+      document.getElementById("btn-cancel-reset").addEventListener("click", () => {
+        resetModal.classList.remove("open");
+      });
+
+      document.getElementById("btn-confirm-reset").addEventListener("click", () => {
+        localStorage.removeItem(STORAGE_KEY);
+        applyState(defaultState);
+        resetModal.classList.remove("open");
+        saveStatus.textContent = "Valores predeterminados restaurados";
+        showToast("Planificación restablecida a su versión original.");
+      });
+
+      // Cerrar modal al hacer clic fuera
+      resetModal.addEventListener("click", (e) => {
+        if (e.target === resetModal) {
+          resetModal.classList.remove("open");
+        }
+      });
+
+      // Inicialización al cargar
+      loadFromLocalStorage();
+      recalculateTimes();
+      calculateRubricScore();
+    })();
+  </script>
+</body>
+</html>
